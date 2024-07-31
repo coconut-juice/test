@@ -1,0 +1,26 @@
+steps:
+  - name: ubuntu
+    args:
+      - echo
+      - '${_IMAGE_TAG} ${_ACTION}'
+  - name: us-central1-docker.pkg.dev/cloudplus1-test-new/lyw-test/builder
+    args:
+      - '-c'
+      - |
+        git clone https://github.com/Leisureroad/push-deploy-demo.git && cd push-deploy-demo
+        gcloud container clusters get-credentials private-cluster-internal-cp \
+        --region us-central1-c --project cloudplus1-test-new
+        sed -i 's|IMAGE_TAG|${_IMAGE_TAG}|g' deployment.yaml
+        gcloud beta deploy releases create nginx-${BUILD_ID} \
+        --delivery-pipeline=nginx-private-cluster \
+        --region=us-central1 \
+        --images=nginx-image=${_IMAGE_TAG} \
+        --skaffold-file skaffold.yaml
+    id: cloud-deploy
+    entrypoint: bash
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _PROJECT_ID: '${PROJECT_ID}'
+tags:
+  - nginx-private-cluster-deploy

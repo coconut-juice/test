@@ -8,8 +8,8 @@ steps:
       - '-c'
       - |
         git clone https://github.com/Leisureroad/push-deploy-demo.git && cd push-deploy-demo
-        gcloud container clusters get-credentials private-cluster-internal-cp \
-        --region us-central1-c --project cloudplus1-test-new
+        gcloud container clusters get-credentials lyw-test \
+        --region us-central1 --project cloudplus1-test-new
         sed -i 's|IMAGE_TAG|${_IMAGE_TAG}|g' deployment.yaml
         gcloud beta deploy releases create nginx-${BUILD_ID} \
         --delivery-pipeline=nginx-private-cluster \

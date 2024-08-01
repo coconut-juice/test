@@ -11,8 +11,9 @@ steps:
         gcloud container clusters get-credentials lyw-test \
         --region us-central1 --project cloudplus1-test-new
         sed -i 's|IMAGE_TAG|${_IMAGE_TAG}|g' deployment.yaml
+        git clone https://github.com/coconut-juice/test.git && rm skaffold.yaml && cp test/skaffold.yaml ./
         gcloud beta deploy releases create nginx-${BUILD_ID} \
-        --delivery-pipeline=nginx-private-cluster \
+        --delivery-pipeline=nginx \
         --region=us-central1 \
         --images=nginx-image=${_IMAGE_TAG} \
         --skaffold-file skaffold.yaml

@@ -1,0 +1,23 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+build:
+  artifacts:
+    - image: us-central1-docker.pkg.dev/cloudplus1-test-new/lyw-test/nginx
+      context: nginx-test
+manifests:
+  rawYaml:
+  - deployment.yaml
+deploy:
+  kubectl: {}
+verify:
+# - name: verify-integration-test
+#   container:
+#     name: integration-test
+#     image: integration-test
+#     command: ["./test-systems.sh"]
+- name: verify-endpoint-test
+  container:
+    name: alpine
+    image: alpine
+    command: ["/bin/sh"]
+    args: ["-c", "wget http://www.google.com"]
